@@ -10,6 +10,8 @@ import TaskScreen from './screens/TaskScreen';
 import PollScreen from './screens/PollScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
 import UserScreen from './screens/UserScreen'
+import MySquadsScreen from './screens/MySquadsScreen'
+import SquadScreen from './screens/SquadScreen'
 
 export default createStackNavigator({
   /*Home: {
@@ -38,5 +40,11 @@ export default createStackNavigator({
   },
   User: {
     screen: UserScreen,
+  },
+  MySquads: {
+    screen: MySquadsScreen,
+  },
+  Squad: {
+    screen: SquadScreen,
   },
 });

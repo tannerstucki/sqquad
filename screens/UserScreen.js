@@ -58,6 +58,7 @@ export default class UserScreen extends React.Component {
             <View style={styles.line} />
             <Text style={styles.generic}>Location</Text>
           </View>
+          {/*Add change password and edit button here*/}
         </LinearGradient>
       </React.Fragment>
     );
@@ -86,5 +87,3 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-
-//, {curuser.last_name}, {curuser.email}, {curuser.phone_number}, {curuser.age}, {curuser.city}, {curuser.state}, {curuser.country}

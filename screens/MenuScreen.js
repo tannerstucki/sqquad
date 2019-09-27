@@ -28,6 +28,12 @@ export default class MenuScreen extends React.Component {
     });
   }
 
+  mySquadsClick(curuser) {
+    this.props.navigation.navigate('MySquads', {
+      curuser: curuser
+    });
+  }
+
   render() {
     const { params } = this.props.navigation.state;
     const curuser = params.curuser;
@@ -77,7 +83,7 @@ export default class MenuScreen extends React.Component {
                 <Text style={styles.options}>ACCOUNT</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this.mySquadsClick.bind(this,curuser)}>
               <View style={styles.row}>
                 <Image
                   style={styles.icon}
