@@ -33,6 +33,12 @@ export default class MenuScreen extends React.Component {
       curuser: curuser
     });
   }
+  
+  myInvitesClick(curuser) {
+    this.props.navigation.navigate('MyInvites', {
+      curuser: curuser
+    });
+  }
 
   render() {
     const { params } = this.props.navigation.state;
@@ -92,13 +98,13 @@ export default class MenuScreen extends React.Component {
                 <Text style={styles.options}>MY SQUADS</Text>
               </View>
             </TouchableOpacity>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={this.myInvitesClick.bind(this,curuser)}>
               <View style={styles.row}>
                 <Image
                   style={styles.icon}
                   source={require('assets/icons/invitation.png')}
                 />
-                <Text style={styles.options}>INVITES</Text>
+                <Text style={styles.options}>MY INVITES</Text>
               </View>
             </TouchableOpacity>
             <TouchableOpacity>

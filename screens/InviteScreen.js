@@ -12,23 +12,23 @@ import BottomMenu from '../components/BottomMenu';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
 
-export default class SquadScreen extends React.Component {
+export default class InviteScreen extends React.Component {
   static navigationOptions = {
-    title: 'Squad Info',
-    //headerLeft: navigate back to home screen
+    title: 'Invite Info',
   };
 
   constructor(props) {
     super(props);
     this.state = {
       squadOrganizer: '',
+      squad: '',
     };
   }
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
-    const squadOrganizerId = params.cursquad.organizer_id;
-    fetch('http://sqquad.x10host.com/api/users/' + squadOrganizerId, {
+    const squad_id = params.curinvite.squad_id;
+    fetch('http://sqquad.x10host.com/api/squads/' + squad_id, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -37,7 +37,24 @@ export default class SquadScreen extends React.Component {
           this.error = responseJson[0];
           throw this.error;
         }
-        this.setState({ squadOrganizer: responseJson[0] });
+        this.setState({ squad: responseJson[0] });
+        return responseJson;
+      })
+      .then(responseJson => {
+        fetch(
+          'http://sqquad.x10host.com/api/users/' + responseJson[0].organizer_id,
+          {
+            method: 'GET',
+          }
+        )
+          .then(response => response.json())
+          .then(responseJson => {
+            if (Object.keys(responseJson[0]) == 'message') {
+              this.error = responseJson[0];
+              throw this.error;
+            }
+            this.setState({ squadOrganizer: responseJson[0] });
+          });
       })
       .catch(error => {
         Alert.alert(error.message);
@@ -52,7 +69,7 @@ export default class SquadScreen extends React.Component {
 
   render() {
     const { params } = this.props.navigation.state;
-    const cursquad = params.cursquad;
+    const curinvite = params.curinvite;
     return (
       <React.Fragment>
         <LinearGradient
@@ -65,14 +82,15 @@ export default class SquadScreen extends React.Component {
               alignItems: 'left',
               justifyContent: 'left',
             }}>
-            <Text style={styles.info}>{cursquad.name}</Text>
+            <Text style={styles.info}>{curinvite.squad_name}</Text>
             <View style={styles.line} />
             <Text style={styles.generic}>Name</Text>
-            <Text style={styles.info}>{cursquad.description}</Text>
+            <Text style={styles.info}>{this.state.squad.description}</Text>
             <View style={styles.line} />
             <Text style={styles.generic}>Description</Text>
             <Text style={styles.info}>
-              {cursquad.city}, {cursquad.state}, {cursquad.country}
+              {this.state.squad.city}, {this.state.squad.state},{' '}
+              {this.state.squad.country}
             </Text>
             <View style={styles.line} />
             <Text style={styles.generic}>Location</Text>

@@ -21,7 +21,7 @@ export default class MessageScreen extends React.Component {
     return (
       <React.Fragment>
       <LinearGradient
-        colors={['#5B4FFF', '#91BEEC']}
+        colors={['#5B4FFF', '#83F8B2']}
         start={{ x: 0, y: .5 }}
         end={{ x: 1, y: 1 }}>
       <View style={{ height: '90%', alignItems: 'center', justifyContent: 'center' }}>

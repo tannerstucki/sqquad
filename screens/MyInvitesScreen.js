@@ -13,9 +13,9 @@ import ListView from '../components/ListView';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
 
-export default class MySquadsScreen extends React.Component {
+export default class MyInvitesScreen extends React.Component {
   static navigationOptions = {
-    title: 'My Squads',
+    title: 'My Invites',
   };
 
   constructor(props) {
@@ -28,7 +28,7 @@ export default class MySquadsScreen extends React.Component {
   componentWillMount() {
     const { params } = this.props.navigation.state;
     const curuser = params.curuser;
-    fetch('http://sqquad.x10host.com/api/squads/user/' + curuser.id, {
+    fetch('http://sqquad.x10host.com/api/invites/user/' + curuser.id, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -44,9 +44,9 @@ export default class MySquadsScreen extends React.Component {
       });
   }
 
-  openSquad(squad){
-    this.props.navigation.navigate('Squad', {
-      cursquad: squad,
+  openInvite(invite){
+    this.props.navigation.navigate('Invite', {
+      curinvite: invite,
     });
   }
 
@@ -68,8 +68,8 @@ export default class MySquadsScreen extends React.Component {
           data={this.state.data}
           renderItem={({ item }) => (
             <React.Fragment>
-              <TouchableOpacity onPress={this.openSquad.bind(this,item)}>
-                <Text style={styles.info}>{item.name} </Text>
+              <TouchableOpacity onPress={this.openInvite.bind(this,item)}>
+                <Text style={styles.info}>{item.squad_name} </Text>
               </TouchableOpacity>
               <View style={styles.line} />
             </React.Fragment>

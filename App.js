@@ -9,9 +9,11 @@ import MessageScreen from './screens/MessageScreen';
 import TaskScreen from './screens/TaskScreen';
 import PollScreen from './screens/PollScreen';
 import ScheduleScreen from './screens/ScheduleScreen';
-import UserScreen from './screens/UserScreen'
-import MySquadsScreen from './screens/MySquadsScreen'
-import SquadScreen from './screens/SquadScreen'
+import UserScreen from './screens/UserScreen';
+import MySquadsScreen from './screens/MySquadsScreen';
+import SquadScreen from './screens/SquadScreen';
+import MyInvitesScreen from './screens/MyInvitesScreen';
+import InviteScreen from './screens/InviteScreen';
 
 export default createStackNavigator({
   /*Home: {
@@ -46,5 +48,11 @@ export default createStackNavigator({
   },
   Squad: {
     screen: SquadScreen,
+  },
+  MyInvites: {
+    screen: MyInvitesScreen,
+  },
+  Invite: {
+    screen: InviteScreen,
   },
 });
