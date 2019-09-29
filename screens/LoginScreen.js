@@ -8,6 +8,7 @@ import {
   Button,
   Alert,
   Headers,
+  TouchableOpacity,
 } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from 'react-navigation';
@@ -33,7 +34,7 @@ export default class Login extends React.Component {
   onLoginPress(email, password) {
     fetch('https://sqquad.x10host.com/api/users/validate', {
       method: 'GET',
-      headers: { email: email, password: password},
+      headers: { email: email, password: password },
     })
       .then(response => response.json())
       .then(responseJson => {
@@ -50,11 +51,15 @@ export default class Login extends React.Component {
       });
   }
 
+  openRegister() {
+    this.props.navigation.navigate('Register', {});
+  }
+
   render() {
     return (
       <LinearGradient
         colors={['#5B4FFF', '#D616CF']}
-        start={{ x: 0, y: .5 }}
+        start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 1 }}>
         <View
           style={[
@@ -76,6 +81,17 @@ export default class Login extends React.Component {
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
           />
+          <TouchableOpacity onPress={this.openRegister.bind(this)}>
+            <Text
+              style={{
+                color: 'white',
+                fontSize: 18,
+                alignSelf: 'center',
+                margin: 15,
+              }}>
+              Create Account
+            </Text>
+          </TouchableOpacity>
           <View
             style={[
               {

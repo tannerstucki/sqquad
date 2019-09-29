@@ -14,6 +14,7 @@ import MySquadsScreen from './screens/MySquadsScreen';
 import SquadScreen from './screens/SquadScreen';
 import MyInvitesScreen from './screens/MyInvitesScreen';
 import InviteScreen from './screens/InviteScreen';
+import RegisterScreen from './screens/RegisterScreen';
 
 export default createStackNavigator({
   /*Home: {
@@ -54,5 +55,8 @@ export default createStackNavigator({
   },
   Invite: {
     screen: InviteScreen,
+  },
+  Register: {
+    screen: RegisterScreen,
   },
 });
