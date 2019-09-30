@@ -18,40 +18,38 @@ import { Card } from 'react-native-paper';
 import User from '../objects/User';
 import HomeScreen from './HomeScreen';
 
-export default class RegisterScreen extends React.Component {
+export default class CreateSquadScreen extends React.Component {
   static navigationOptions = {
-    title: 'Register',
-    header: null,
+    title: 'Create New Squad',
   };
 
   constructor(props) {
     super(props);
     this.state = {
       id: '',
-      first_name: '',
-      last_name: '',
-      email: '',
-      phone_number: '',
-      age: '',
+      name: '',
+      description: '',
       city: '',
       state: '',
       country: '',
-      password: '',
+      organizer_id: '',
     };
   }
 
-  onRegisterPress() {
+  componentWillMount() {
+    const { params } = this.props.navigation.state;
+    const organizer_id = params.curuser.id;
+    this.setState({ organizer_id: organizer_id });
+  }
+
+  onCreatePress(email, password) {
     const body = JSON.stringify({
-      first_name: this.state.first_name,
-      last_name: this.state.last_name,
-      email: this.state.email,
-      phone_number: this.state.phone_number,
-      age: this.state.age,
+      name: this.state.name,
+      description: this.state.description,
       city: this.state.city,
       state: this.state.state,
       country: this.state.country,
-      password: this.state.password,
-      user_type: 'user',
+      organizer_id: this.state.organizer_id,
     });
 
     const init = {
@@ -60,28 +58,25 @@ export default class RegisterScreen extends React.Component {
       body,
     };
 
-    fetch('http://sqquad.x10host.com/api/users', init)
+    fetch('http://sqquad.x10host.com/api/squads', init)
       .then(response => response.json())
       .then(responseJson => {
         /*if (Object.keys(responseJson[0]) == 'message') {
           this.error = responseJson[0];
           throw this.error;
         }*/
-        const curuser = {
+        Alert.alert(responseJson[0].confirmation);
+        const cursquad = {
           id: responseJson[0].id,
-          first_name: this.state.first_name,
-          last_name: this.state.last_name,
-          email: this.state.email,
-          phone_number: this.state.phone_number,
-          age: this.state.age,
+          name: this.state.name,
+          description: this.state.description,
           city: this.state.city,
           state: this.state.state,
           country: this.state.country,
-          password: this.state.password,
-          user_type: 'user',
+          organizer_id: this.state.organizer_id,
         };
-        this.props.navigation.navigate('Home', {
-          curuser: curuser,
+        this.props.navigation.navigate('Squad', {
+          cursquad: cursquad,
         });
       })
       .catch(error => {
@@ -89,13 +84,18 @@ export default class RegisterScreen extends React.Component {
       });
   }
 
-  openLogin() {
-    this.props.navigation.navigate('Login', {});
-  }
-
   render() {
+    const { params } = this.props.navigation.state;
+    const curuser = params.curuser;
+
     var isEnabled = 'false';
-    if (this.state.first_name.length > 0 & this.state.last_name.length > 0 & this.state.email.length > 0 & this.state.phone_number.length > 0 & this.state.age.length > 0 & this.state.city.length > 0 & this.state.state.length > 0 & this.state.country.length > 0 & this.state.password.length > 0) {
+    if (
+      (this.state.name.length > 0) &
+      (this.state.description.length > 0) &
+      (this.state.city.length > 0) &
+      (this.state.state.length > 0) &
+      (this.state.country.length > 0)
+    ) {
       isEnabled = '';
     }
 
@@ -104,45 +104,27 @@ export default class RegisterScreen extends React.Component {
         colors={['#5B4FFF', '#D616CF']}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 1 }}>
-        <ScrollView>
+        <ScrollView style={{height:'100%'}}>
           <View
             style={[
               {
                 height: '100%',
                 alignContent: 'center',
                 justifyContent: 'center',
+                marginTop: 50,
               },
             ]}>
-            <Image style={styles.logo} source={require('assets/Squad19.png')} />
             <TextInput
               style={styles.user_input}
-              placeholder="First Name"
-              onChangeText={first_name => this.setState({ first_name })}
-              value={this.state.first_name}
+              placeholder="Name"
+              onChangeText={name => this.setState({ name })}
+              value={this.state.name}
             />
             <TextInput
               style={styles.user_input}
-              placeholder="Last Name"
-              onChangeText={last_name => this.setState({ last_name })}
-              value={this.state.last_name}
-            />
-            <TextInput
-              style={styles.user_input}
-              placeholder="Email"
-              onChangeText={email => this.setState({ email })}
-              value={this.state.email}
-            />
-            <TextInput
-              style={styles.user_input}
-              placeholder="Phone Number"
-              onChangeText={phone_number => this.setState({ phone_number })}
-              value={this.state.phone_number}
-            />
-            <TextInput
-              style={styles.user_input}
-              placeholder="Age"
-              onChangeText={age => this.setState({ age })}
-              value={this.state.age}
+              placeholder="Description"
+              onChangeText={description => this.setState({ description })}
+              value={this.state.description}
             />
             <TextInput
               style={styles.user_input}
@@ -162,24 +144,6 @@ export default class RegisterScreen extends React.Component {
               onChangeText={country => this.setState({ country })}
               value={this.state.country}
             />
-            <TextInput
-              style={styles.user_input}
-              placeholder="Password"
-              secureTextEntry={true}
-              onChangeText={password => this.setState({ password })}
-              value={this.state.password}
-            />
-            <TouchableOpacity onPress={this.openLogin.bind(this)}>
-              <Text
-                style={{
-                  color: 'white',
-                  fontSize: 18,
-                  alignSelf: 'center',
-                  margin: 15,
-                }}>
-                Already Have An Account?
-              </Text>
-            </TouchableOpacity>
             <View
               style={[
                 {
@@ -194,8 +158,8 @@ export default class RegisterScreen extends React.Component {
                 variant="primary"
                 color="white"
                 borderRadius="10"
-                onPress={this.onRegisterPress.bind(this)}
-                title='Create Account'
+                onPress={this.onCreatePress.bind(this)}
+                title="Create Squad"
                 disabled={isEnabled}
               />
             </View>
@@ -207,13 +171,6 @@ export default class RegisterScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  logo: {
-    height: 150,
-    width: 150,
-    margin: 10,
-    alignSelf: 'center',
-    marginTop: 100,
-  },
   user_input: {
     height: 40,
     width: '75%',

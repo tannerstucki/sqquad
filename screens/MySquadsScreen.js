@@ -7,9 +7,8 @@ import {
   Button,
   Alert,
   FlatList,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
-import ListView from '../components/ListView';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
 
@@ -44,10 +43,16 @@ export default class MySquadsScreen extends React.Component {
       });
   }
 
-  openSquad(squad){
+  openSquad(cursquad) {
     this.props.navigation.navigate('Squad', {
-      cursquad: squad,
+      cursquad: cursquad,
     });
+  }
+
+  openCreateSquad(curuser){
+    this.props.navigation.navigate('CreateSquad',{
+      curuser: curuser,
+    })
   }
 
   render() {
@@ -64,18 +69,30 @@ export default class MySquadsScreen extends React.Component {
               height: '100%',
             }}>
             <View style={styles.container}>
-        <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => (
-            <React.Fragment>
-              <TouchableOpacity onPress={this.openSquad.bind(this,item)}>
-                <Text style={styles.info}>{item.name} </Text>
-              </TouchableOpacity>
-              <View style={styles.line} />
-            </React.Fragment>
-          )}
-        />
-      </View>
+              <FlatList
+                data={this.state.data}
+                renderItem={({ item }) => (
+                  <React.Fragment>
+                    <TouchableOpacity onPress={this.openSquad.bind(this, item)}>
+                      <Text style={styles.info}>{item.name} </Text>
+                    </TouchableOpacity>
+                    <View style={styles.line} />
+                  </React.Fragment>
+                )}
+              />
+              <View style={styles.customButton}>
+                <TouchableOpacity onPress={this.openCreateSquad.bind(this,curuser)}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    Create New Squad
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </LinearGradient>
       </React.Fragment>
@@ -87,6 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 22,
+    paddingBottom: 50,
   },
   info: {
     fontSize: 20,
@@ -101,5 +119,16 @@ const styles = StyleSheet.create({
     height: 1,
     width: '90%',
     alignSelf: 'center',
+  },
+  customButton: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    width: '75%',
+    height: '10%',
+    borderRadius: 15,
+    marginBottom: 25,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });

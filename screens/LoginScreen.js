@@ -17,7 +17,7 @@ import { Card } from 'react-native-paper';
 import User from '../objects/User';
 import HomeScreen from './HomeScreen';
 
-export default class Login extends React.Component {
+export default class LoginScreen extends React.Component {
   static navigationOptions = {
     title: 'Login',
     header: null,
@@ -89,7 +89,7 @@ export default class Login extends React.Component {
                 alignSelf: 'center',
                 margin: 15,
               }}>
-              Create Account
+              Don't have an account?
             </Text>
           </TouchableOpacity>
           <View

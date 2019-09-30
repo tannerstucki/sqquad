@@ -7,16 +7,18 @@ import {
   Button,
   StyleSheet,
   Alert,
+  HeaderBackButton,
 } from 'react-native';
 import BottomMenu from '../components/BottomMenu';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
 
 export default class SquadScreen extends React.Component {
-  static navigationOptions = {
-    title: 'Squad Info',
-    //headerLeft: navigate back to home screen
-  };
+  static navigationOptions({ navigation }) {
+    return {
+      title: 'Squad Info',
+    };
+  }
 
   constructor(props) {
     super(props);

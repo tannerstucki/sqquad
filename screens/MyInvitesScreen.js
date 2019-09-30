@@ -9,7 +9,6 @@ import {
   FlatList,
   StyleSheet
 } from 'react-native';
-import ListView from '../components/ListView';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
 
