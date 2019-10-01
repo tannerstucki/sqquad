@@ -7,7 +7,7 @@ import {
   Button,
   Alert,
   FlatList,
-  StyleSheet
+  StyleSheet,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
@@ -43,10 +43,16 @@ export default class MyInvitesScreen extends React.Component {
       });
   }
 
-  openInvite(invite){
+  openInvite(invite) {
     this.props.navigation.navigate('Invite', {
       curinvite: invite,
     });
+  }
+
+  openCreateInvite(curuser){
+    this.props.navigation.navigate('CreateInvite',{
+      curuser: curuser,
+    })
   }
 
   render() {
@@ -63,18 +69,32 @@ export default class MyInvitesScreen extends React.Component {
               height: '100%',
             }}>
             <View style={styles.container}>
-        <FlatList
-          data={this.state.data}
-          renderItem={({ item }) => (
-            <React.Fragment>
-              <TouchableOpacity onPress={this.openInvite.bind(this,item)}>
-                <Text style={styles.info}>{item.squad_name} </Text>
-              </TouchableOpacity>
-              <View style={styles.line} />
-            </React.Fragment>
-          )}
-        />
-      </View>
+              <FlatList
+                data={this.state.data}
+                renderItem={({ item }) => (
+                  <React.Fragment>
+                    <TouchableOpacity
+                      onPress={this.openInvite.bind(this, item)}>
+                      <Text style={styles.info}>{item.squad_name} </Text>
+                    </TouchableOpacity>
+                    <View style={styles.line} />
+                  </React.Fragment>
+                )}
+              />
+              <View style={styles.customButton}>
+                <TouchableOpacity
+                  onPress={this.openCreateInvite.bind(this, curuser)}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    Invite A Friend
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
           </View>
         </LinearGradient>
       </React.Fragment>
@@ -100,5 +120,16 @@ const styles = StyleSheet.create({
     height: 1,
     width: '90%',
     alignSelf: 'center',
+  },
+  customButton: {
+    flexDirection: 'row',
+    backgroundColor: 'black',
+    width: '75%',
+    height: '10%',
+    borderRadius: 15,
+    marginBottom: 40,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
