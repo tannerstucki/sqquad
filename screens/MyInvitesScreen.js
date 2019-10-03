@@ -49,10 +49,10 @@ export default class MyInvitesScreen extends React.Component {
     });
   }
 
-  openCreateInvite(curuser){
-    this.props.navigation.navigate('CreateInvite',{
+  openCreateInvite(curuser) {
+    this.props.navigation.navigate('CreateInvite', {
       curuser: curuser,
-    })
+    });
   }
 
   render() {
@@ -81,20 +81,20 @@ export default class MyInvitesScreen extends React.Component {
                   </React.Fragment>
                 )}
               />
-              <View style={styles.customButton}>
-                <TouchableOpacity
-                  onPress={this.openCreateInvite.bind(this, curuser)}>
-                  <Text
-                    style={{
-                      color: 'white',
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}>
-                    Invite A Friend
-                  </Text>
-                </TouchableOpacity>
-              </View>
             </View>
+            <TouchableOpacity
+              onPress={this.openCreateInvite.bind(this, curuser)}>
+              <View style={styles.customButton}>
+                <Text
+                  style={{
+                    color: 'white',
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}>
+                  Invite A Friend
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </LinearGradient>
       </React.Fragment>
@@ -122,14 +122,13 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   customButton: {
-    flexDirection: 'row',
     backgroundColor: 'black',
     width: '75%',
-    height: '10%',
+    height: '30%',
     borderRadius: 15,
-    marginBottom: 40,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    bottom: 0,
   },
 });

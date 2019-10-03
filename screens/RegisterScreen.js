@@ -80,6 +80,7 @@ export default class RegisterScreen extends React.Component {
           password: this.state.password,
           user_type: 'user',
         };
+        Alert.alert(responseJson[0].confirmation);
         this.props.navigation.navigate('Home', {
           curuser: curuser,
         });

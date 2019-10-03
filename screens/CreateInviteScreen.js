@@ -12,6 +12,7 @@ import {
   ScrollView,
   Picker,
   FlatList,
+  Dimensions,
 } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from 'react-navigation';
@@ -37,12 +38,13 @@ export default class CreateInviteScreen extends React.Component {
       final_message_show: false,
       found_card_show: false,
       squad_card_show: false,
+      found_user_show: false,
       not_found_show: false,
       cur_first_name: '',
       cur_last_name: '',
       chosen_user: '',
       chosen_squad: '',
-      squad_name: 'Select Squad',
+      acceptor_email: '',
     };
   }
 
@@ -66,10 +68,10 @@ export default class CreateInviteScreen extends React.Component {
     )
       .then(response => response.json())
       .then(responseJson => {
-        /*if (Object.keys(responseJson[0]) == 'message') {
+        if (Object.keys(responseJson[0]) == 'message') {
           this.error = responseJson[0];
           throw this.error;
-        }*/
+        }
         this.setState({
           found_users: responseJson,
           search_show: false,
@@ -77,7 +79,12 @@ export default class CreateInviteScreen extends React.Component {
         });
       })
       .catch(error => {
-        Alert.alert(error.message);
+        Alert.alert(error.message + " Invite them by email instead!");
+        this.setState({
+          search_show: false,
+          final_message_show: true,
+          found_user_show: false,
+        });
       });
   }
 
@@ -104,6 +111,7 @@ export default class CreateInviteScreen extends React.Component {
       found_card_show: false,
       chosen_user: item,
       final_message_show: true,
+      found_user_show: true,
     });
   }
 
@@ -112,6 +120,63 @@ export default class CreateInviteScreen extends React.Component {
       squad_card_show: false,
       chosen_squad: item,
       final_message_show: true,
+    });
+  }
+
+  createInvite(curuser) {
+    var body = '';
+    if (!this.state.acceptor_email) {
+      body = JSON.stringify({
+        sender_id: curuser.id,
+        acceptor_id: this.state.chosen_user.id,
+        squad_id: this.state.chosen_squad.id,
+        invite_type: 'internal',
+        acceptor_email: this.state.chosen_user.email,
+        status: 'new',
+      });
+    } else {
+      body = JSON.stringify({
+        sender_id: curuser.id,
+        acceptor_id: null,
+        squad_id: this.state.chosen_squad.id,
+        invite_type: 'external',
+        acceptor_email: this.state.acceptor_email,
+        status: 'new',
+      });
+    }
+
+    const init = {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body,
+    };
+
+    fetch('http://sqquad.x10host.com/api/invites', init)
+      .then(response => response.json())
+      .then(responseJson => {
+        /*if (Object.keys(responseJson[0]) == 'message') {
+          this.error = responseJson[0];
+          throw this.error;
+        }*/
+        //Alert.alert("You made it!");
+        Alert.alert(
+          responseJson[0].confirmation +
+            ". We'll let you know when they respond!"
+        );
+        this.props.navigation.navigate('Menu', {
+          curuser: curuser,
+        });
+      })
+      .catch(error => {
+        Alert.alert(error.message);
+      });
+  }
+
+  noAccountOption() {
+    this.setState({
+      search_show: false,
+      final_message_show: true,
+      found_user_show: false,
     });
   }
 
@@ -136,18 +201,10 @@ export default class CreateInviteScreen extends React.Component {
         colors={['#5B4FFF', '#D616CF']}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 1 }}>
-        <ScrollView style={{ height: '100%' }}>
+        <View style={{ height: '100%' }}>
           {this.state.search_show ? (
-            <React.Fragment>
-              <View
-                style={[
-                  {
-                    height: '100%',
-                    alignContent: 'center',
-                    justifyContent: 'center',
-                    marginTop: 50,
-                  },
-                ]}>
+            <React.Fragment style={{ position: 'absolute' }}>
+              <View style={{ marginTop: 40 }}>
                 <TextInput
                   style={styles.user_input}
                   placeholder="First Name"
@@ -160,108 +217,128 @@ export default class CreateInviteScreen extends React.Component {
                   onChangeText={last_name => this.setState({ last_name })}
                   value={this.state.last_name}
                 />
-              </View>
-              <View style={styles.customButton}>
                 <TouchableOpacity
                   onPress={this.searchUser.bind(this, curuser)}
                   disabled={isEnabled}>
-                  <Text
-                    style={{
-                      color: buttonColor,
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}>
-                    Search For User
+                  <View style={styles.customButton}>
+                    <Text
+                      style={{
+                        color: buttonColor,
+                        fontSize: 18,
+                        fontWeight: 'bold',
+                      }}>
+                      Search For User
+                    </Text>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity onPress={this.noAccountOption.bind(this)}>
+                  <Text style={{ color: 'white', alignSelf: 'center' }}>
+                    I know this person does not have an account
                   </Text>
                 </TouchableOpacity>
               </View>
             </React.Fragment>
           ) : null}
-        </ScrollView>
-        {this.state.found_card_show ? (
-          <Card style={styles.resultsCard}>
-            <FlatList
-              style={{ width: '100%' }}
-              data={this.state.found_users}
-              renderItem={({ item }) => (
-                <React.Fragment>
-                  <TouchableOpacity onPress={this.chooseUser.bind(this, item)}>
-                    <Text style={styles.info}>
-                      {item.first_name} {item.last_name}
-                    </Text>
-                    <Text style={styles.generic}>{item.email}</Text>
-                    <Text style={styles.generic}>
-                      {item.city}, {item.state}, {item.country}
-                    </Text>
-                  </TouchableOpacity>
-                  <View style={styles.line} />
-                </React.Fragment>
-              )}
-            />
-          </Card>
-        ) : null}
-        {this.state.final_message_show ? (
-          <View
-            style={[
-              {
-                height: '100%',
-                alignContent: 'center',
-                alignSelf: 'center',
-                marginTop: '20%',
-                position: 'absolute',
-              },
-            ]}>
-            <Text style={styles.finalMessage}>You're sending an invite to</Text>
-            <Text style={styles.finalMessage}>
-              {this.state.chosen_user.first_name}{' '}
-              {this.state.chosen_user.last_name}
-            </Text>
-            {this.state.chosen_squad ? (
-              <React.Fragment>
-                <Text style={styles.finalMessage}>to join the</Text>
+          {this.state.found_card_show ? (
+            <Card style={styles.resultsCard}>
+              <FlatList
+                style={{ padding: 10 }}
+                data={this.state.found_users}
+                renderItem={({ item }) => (
+                  <React.Fragment>
+                    <TouchableOpacity
+                      onPress={this.chooseUser.bind(this, item)}>
+                      <Text style={styles.info}>
+                        {item.first_name} {item.last_name}
+                      </Text>
+                      <Text style={styles.generic}>{item.email}</Text>
+                      <Text style={styles.generic}>
+                        {item.city}, {item.state}, {item.country}
+                      </Text>
+                    </TouchableOpacity>
+                    <View style={styles.line} />
+                  </React.Fragment>
+                )}
+              />
+            </Card>
+          ) : null}
+          {this.state.final_message_show ? (
+            <View
+              style={[
+                {
+                  height: '100%',
+                  alignContent: 'center',
+                  alignSelf: 'center',
+                  marginTop: '20%',
+                  position: 'absolute',
+                },
+              ]}>
+              <Text style={styles.finalMessage}>
+                You're sending an invite to
+              </Text>
+              {this.state.found_user_show ? (
                 <Text style={styles.finalMessage}>
-                  {' '}
-                  {this.state.chosen_squad.name}{' '}
+                  {this.state.chosen_user.first_name}{' '}
+                  {this.state.chosen_user.last_name}
                 </Text>
-                <View style={styles.customButton}>
-                <TouchableOpacity>
-                  <Text
-                    style={{
-                      color: buttonColor,
-                      fontSize: 18,
-                      fontWeight: 'bold',
-                    }}>
-                    Send Invite
-                  </Text>
-                </TouchableOpacity>
-              </View>
-              </React.Fragment>
-            ) : (
-              <TouchableOpacity onPress={this.getSquads.bind(this, curuser.id)}>
-                <Text style={styles.greyFinalMessage}>
-                  {' '}
-                  {this.state.squad_name}{' '}
-                </Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        ) : null}
-        {this.state.squad_card_show ? (
-          <Card style={styles.resultsCard}>
-            <FlatList
-              style={{ width: '100%' }}
-              data={this.state.found_squads}
-              renderItem={({ item }) => (
-                <React.Fragment>
-                  <TouchableOpacity onPress={this.chooseSquad.bind(this, item)}>
-                    <Text style={styles.info}>{item.name}</Text>
-                  </TouchableOpacity>
-                  <View style={styles.line} />
-                </React.Fragment>
+              ) : (
+                <TextInput
+                  style={styles.user_input}
+                  placeholder="Email"
+                  onChangeText={acceptor_email =>
+                    this.setState({ acceptor_email })
+                  }
+                  value={this.state.acceptor_email}
+                />
               )}
-            />
-          </Card>
-        ) : null}
+              {this.state.chosen_squad ? (
+                <React.Fragment>
+                  <Text style={styles.finalMessage}>to join the</Text>
+                  <Text style={styles.finalMessage}>
+                    {this.state.chosen_squad.name}
+                  </Text>
+                  <TouchableOpacity
+                    onPress={this.createInvite.bind(this, curuser)}>
+                    <View style={styles.customButton}>
+                      <Text
+                        style={{
+                          color: 'white',
+                          fontSize: 18,
+                          fontWeight: 'bold',
+                        }}>
+                        Send Invite
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                </React.Fragment>
+              ) : (
+                <TouchableOpacity
+                  onPress={this.getSquads.bind(this, curuser.id)}>
+                  <View style={styles.customButton}>
+                    <Text style={styles.finalMessage}>Select Squad</Text>
+                  </View>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : null}
+          {this.state.squad_card_show ? (
+            <Card style={styles.resultsCard}>
+              <FlatList
+                style={{ padding: 10 }}
+                data={this.state.found_squads}
+                renderItem={({ item }) => (
+                  <React.Fragment>
+                    <TouchableOpacity
+                      onPress={this.chooseSquad.bind(this, item)}>
+                      <Text style={styles.info}>{item.name}</Text>
+                    </TouchableOpacity>
+                    <View style={styles.squadLine} />
+                  </React.Fragment>
+                )}
+              />
+            </Card>
+          ) : null}
+        </View>
       </LinearGradient>
     );
   }
@@ -284,10 +361,11 @@ const styles = StyleSheet.create({
     width: '75%',
     height: '30%',
     borderRadius: 15,
-    marginBottom: 40,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 40,
   },
   resultsCard: {
     width: '75%',
@@ -303,14 +381,24 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: 'bold',
     color: '#5B4FFF',
-    marginTop: 10,
+    marginTop: 15,
   },
   line: {
     backgroundColor: '#5B4FFF',
     height: 1,
-    width: '100%',
     alignSelf: 'center',
     marginTop: 2,
+    marginBottom: 2,
+    width: Dimensions.get('window').width * 0.6,
+  },
+  squadLine: {
+    backgroundColor: '#5B4FFF',
+    height: 1,
+    //width: '80%',
+    alignSelf: 'center',
+    marginTop: 2,
+    marginBottom: 10,
+    width: Dimensions.get('window').width * 0.6,
   },
   generic: {
     fontSize: 12,
@@ -325,7 +413,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
   },
-  greyFinalMessage: {
+  /*greyFinalMessage: {
     fontSize: 20,
     fontWeight: 'bold',
     color: 'grey',
@@ -333,7 +421,7 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     textDecorationLine: 'underline',
     alignSelf: 'center',
-  },
+  },*/
 });
 
 /*
