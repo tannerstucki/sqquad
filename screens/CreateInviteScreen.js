@@ -50,7 +50,7 @@ export default class CreateInviteScreen extends React.Component {
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
-    this.setState({ chosenSquad: params.cursquad });
+    this.setState({ chosen_squad: params.cursquad });
   }
 
   searchUser() {
@@ -79,7 +79,7 @@ export default class CreateInviteScreen extends React.Component {
         });
       })
       .catch(error => {
-        Alert.alert(error.message + " Invite them by email instead!");
+        Alert.alert(error.message + ' Invite them by email instead!');
         this.setState({
           search_show: false,
           final_message_show: true,
@@ -180,10 +180,19 @@ export default class CreateInviteScreen extends React.Component {
     });
   }
 
+  setSquad(cursquad) {
+    this.setState({
+      chosen_squad: cursquad,
+    });
+  }
+
+  getEmailButton(){
+
+  }
+
   render() {
     const { params } = this.props.navigation.state;
     const curuser = params.curuser;
-    var curlabel = '';
 
     var isEnabled = 'false';
     var buttonColor = 'grey';
@@ -193,6 +202,13 @@ export default class CreateInviteScreen extends React.Component {
     ) {
       isEnabled = '';
       buttonColor = 'white';
+    }
+
+    var emailIsEnabled = 'false';
+    var emailButtonColor = 'grey';
+    if (this.state.acceptor_email.length > 0) {
+      emailIsEnabled = '';
+      emailIsEnabled = 'white';
     }
 
     return (
@@ -298,13 +314,16 @@ export default class CreateInviteScreen extends React.Component {
                     {this.state.chosen_squad.name}
                   </Text>
                   <TouchableOpacity
-                    onPress={this.createInvite.bind(this, curuser)}>
+                    onPress={this.createInvite.bind(this, curuser)}
+                    disabled={(this.state.acceptor_email.length > 0 && this.state.acceptor_email.includes("@")) || this.state.chosen_user ? (''):'false'}>
                     <View style={styles.customButton}>
                       <Text
                         style={{
-                          color: 'white',
-                          fontSize: 18,
                           fontWeight: 'bold',
+                          color: (this.state.acceptor_email.length > 0 && this.state.acceptor_email.includes("@")) || this.state.chosen_user ? ('white'):'grey',
+                          fontSize: 20,
+                          alignContent: 'center',
+                          alignSelf: 'center',
                         }}>
                         Send Invite
                       </Text>
@@ -315,7 +334,7 @@ export default class CreateInviteScreen extends React.Component {
                 <TouchableOpacity
                   onPress={this.getSquads.bind(this, curuser.id)}>
                   <View style={styles.customButton}>
-                    <Text style={styles.finalMessage}>Select Squad</Text>
+                    <Text style={styles.buttonText}>Select Squad</Text>
                   </View>
                 </TouchableOpacity>
               )}
@@ -368,8 +387,8 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   resultsCard: {
-    width: '75%',
-    height: '50%',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').width * 1,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
@@ -394,7 +413,6 @@ const styles = StyleSheet.create({
   squadLine: {
     backgroundColor: '#5B4FFF',
     height: 1,
-    //width: '80%',
     alignSelf: 'center',
     marginTop: 2,
     marginBottom: 10,
@@ -413,15 +431,13 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     alignSelf: 'center',
   },
-  /*greyFinalMessage: {
-    fontSize: 20,
+  buttonText: {
     fontWeight: 'bold',
-    color: 'grey',
-    marginTop: 10,
+    color: 'white',
+    fontSize: 20,
     alignContent: 'center',
-    textDecorationLine: 'underline',
     alignSelf: 'center',
-  },*/
+  },
 });
 
 /*

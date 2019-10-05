@@ -43,9 +43,10 @@ export default class MySquadsScreen extends React.Component {
       });
   }
 
-  openSquad(cursquad) {
+  openSquad(cursquad, curuser) {
     this.props.navigation.navigate('Squad', {
       cursquad: cursquad,
+      curuser: curuser,
     });
   }
 
@@ -73,7 +74,7 @@ export default class MySquadsScreen extends React.Component {
                 data={this.state.data}
                 renderItem={({ item }) => (
                   <React.Fragment>
-                    <TouchableOpacity onPress={this.openSquad.bind(this, item)}>
+                    <TouchableOpacity onPress={this.openSquad.bind(this, item, curuser)}>
                       <Text style={styles.info}>{item.name} </Text>
                     </TouchableOpacity>
                     <View style={styles.line} />

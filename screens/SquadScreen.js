@@ -8,6 +8,8 @@ import {
   StyleSheet,
   Alert,
   HeaderBackButton,
+  ScrollView,
+  Dimensions,
 } from 'react-native';
 import BottomMenu from '../components/BottomMenu';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -52,16 +54,25 @@ export default class SquadScreen extends React.Component {
     });
   }
 
+  openCreateInvite(cursquad, curuser){
+    this.props.navigation.navigate('CreateInvite', {
+      curuser: curuser,
+      cursquad: cursquad,
+    });
+  }
+
   render() {
     const { params } = this.props.navigation.state;
     const cursquad = params.cursquad;
+    const curuser = params.curuser;
+
     return (
       <React.Fragment>
         <LinearGradient
           colors={['#5B4FFF', '#D616CF']}
           start={{ x: 0, y: 0.5 }}
           end={{ x: 1, y: 1 }}>
-          <View
+          <ScrollView
             style={{
               height: '100%',
               alignItems: 'left',
@@ -87,7 +98,13 @@ export default class SquadScreen extends React.Component {
             </TouchableOpacity>
             <View style={styles.line} />
             <Text style={styles.generic}>Squad Organizer</Text>
-          </View>
+                <TouchableOpacity
+                  onPress={this.openCreateInvite.bind(this, cursquad, curuser)}>
+                  <View style={styles.customButton}>
+                    <Text style={styles.buttonText}>Invite a Friend to this Squad</Text>
+                  </View>
+                </TouchableOpacity>
+          </ScrollView>
           {/*Add squad options like invite friend, leave group, etc.*/}
         </LinearGradient>
       </React.Fragment>
@@ -113,7 +130,29 @@ const styles = StyleSheet.create({
   line: {
     backgroundColor: '#E8E8E8',
     height: 1,
-    width: '90%',
+    width: Dimensions.get('window').width * 0.9,
+    alignSelf: 'center',
+    alignContent: 'center',
+    justifyContent: 'center',
+    marginLeft: Dimensions.get('window').width * 0.05,
+  },
+  customButton: {
+    backgroundColor: 'black',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').height * 0.1,
+    borderRadius: 15,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    marginBottom: 40,
+    marginHorizontal: 15,
+  },
+  buttonText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+    color: 'white',
+    alignContent: 'center',
     alignSelf: 'center',
   },
 });

@@ -43,9 +43,10 @@ export default class MyInvitesScreen extends React.Component {
       });
   }
 
-  openInvite(invite) {
+  openInvite(invite, curuser) {
     this.props.navigation.navigate('Invite', {
       curinvite: invite,
+      curuser: curuser,
     });
   }
 
@@ -74,7 +75,7 @@ export default class MyInvitesScreen extends React.Component {
                 renderItem={({ item }) => (
                   <React.Fragment>
                     <TouchableOpacity
-                      onPress={this.openInvite.bind(this, item)}>
+                      onPress={this.openInvite.bind(this, item, curuser)}>
                       <Text style={styles.info}>{item.squad_name} </Text>
                     </TouchableOpacity>
                     <View style={styles.line} />
