@@ -22,6 +22,10 @@ export default class MenuScreen extends React.Component {
     this.state = {};
   }
 
+  componentWillMount() {
+    this.forceUpdate();
+  }
+
   accountClick(curuser) {
     this.props.navigation.navigate('User', {
       curuser: curuser

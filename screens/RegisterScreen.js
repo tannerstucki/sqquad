@@ -10,6 +10,7 @@ import {
   Headers,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from 'react-navigation';
@@ -63,10 +64,10 @@ export default class RegisterScreen extends React.Component {
     fetch('http://sqquad.x10host.com/api/users', init)
       .then(response => response.json())
       .then(responseJson => {
-        /*if (Object.keys(responseJson[0]) == 'message') {
+        if (Object.keys(responseJson[0]) == 'message') {
           this.error = responseJson[0];
           throw this.error;
-        }*/
+        }
         const curuser = {
           id: responseJson[0].id,
           first_name: this.state.first_name,
@@ -96,8 +97,20 @@ export default class RegisterScreen extends React.Component {
 
   render() {
     var isEnabled = 'false';
-    if (this.state.first_name.length > 0 & this.state.last_name.length > 0 & this.state.email.length > 0 & this.state.phone_number.length > 0 & this.state.age.length > 0 & this.state.city.length > 0 & this.state.state.length > 0 & this.state.country.length > 0 & this.state.password.length > 0) {
+    var text_color = 'grey';
+    if (
+      (this.state.first_name.length > 0) &
+      (this.state.last_name.length > 0) &
+      (this.state.email.length > 0) &
+      (this.state.phone_number.length > 0) &
+      (this.state.age.length > 0) &
+      (this.state.city.length > 0) &
+      (this.state.state.length > 0) &
+      (this.state.country.length > 0) &
+      (this.state.password.length > 0)
+    ) {
       isEnabled = '';
+      text_color = 'white';
     }
 
     return (
@@ -170,6 +183,20 @@ export default class RegisterScreen extends React.Component {
               onChangeText={password => this.setState({ password })}
               value={this.state.password}
             />
+            <TouchableOpacity
+              onPress={this.onRegisterPress.bind(this)}
+              disabled={isEnabled}>
+              <View style={styles.customButton}>
+                <Text
+                  style={{
+                    color: text_color,
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}>
+                  Create Account
+                </Text>
+              </View>
+            </TouchableOpacity>
             <TouchableOpacity onPress={this.openLogin.bind(this)}>
               <Text
                 style={{
@@ -177,29 +204,11 @@ export default class RegisterScreen extends React.Component {
                   fontSize: 18,
                   alignSelf: 'center',
                   margin: 15,
+                  marginBottom: 80,
                 }}>
                 Already Have An Account?
               </Text>
             </TouchableOpacity>
-            <View
-              style={[
-                {
-                  width: '50%',
-                  alignSelf: 'center',
-                  variant: 'primary',
-                  margin: 10,
-                  marginBottom: 300,
-                },
-              ]}>
-              <Button
-                variant="primary"
-                color="white"
-                borderRadius="10"
-                onPress={this.onRegisterPress.bind(this)}
-                title='Create Account'
-                disabled={isEnabled}
-              />
-            </View>
           </View>
         </ScrollView>
       </LinearGradient>
@@ -224,5 +233,15 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     alignSelf: 'center',
+  },
+  customButton: {
+    backgroundColor: 'black',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').height * 0.1,
+    borderRadius: 15,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
   },
 });

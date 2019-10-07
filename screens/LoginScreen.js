@@ -9,6 +9,7 @@ import {
   Alert,
   Headers,
   TouchableOpacity,
+  Dimensions,
 } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from 'react-navigation';
@@ -31,10 +32,10 @@ export default class LoginScreen extends React.Component {
     };
   }
 
-  onLoginPress(email, password) {
+  onLoginPress() {
     fetch('https://sqquad.x10host.com/api/users/validate', {
       method: 'GET',
-      headers: { email: email, password: password },
+      headers: { email: this.state.email, password: this.state.password },
     })
       .then(response => response.json())
       .then(responseJson => {
@@ -81,6 +82,18 @@ export default class LoginScreen extends React.Component {
             onChangeText={password => this.setState({ password })}
             value={this.state.password}
           />
+          <TouchableOpacity onPress={this.onLoginPress.bind(this)}>
+            <View style={styles.customButton}>
+              <Text
+                style={{
+                  color: 'white',
+                  fontSize: 18,
+                  fontWeight: 'bold',
+                }}>
+                Login
+              </Text>
+            </View>
+          </TouchableOpacity>
           <TouchableOpacity onPress={this.openRegister.bind(this)}>
             <Text
               style={{
@@ -92,27 +105,6 @@ export default class LoginScreen extends React.Component {
               Don't have an account?
             </Text>
           </TouchableOpacity>
-          <View
-            style={[
-              {
-                width: '50%',
-                alignSelf: 'center',
-                variant: 'primary',
-                margin: 10,
-              },
-            ]}>
-            <Button
-              variant="primary"
-              color="white"
-              borderRadius="10"
-              onPress={this.onLoginPress.bind(
-                this,
-                this.state.email,
-                this.state.password
-              )}
-              title="Login"
-            />
-          </View>
         </View>
       </LinearGradient>
     );
@@ -136,5 +128,15 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     alignSelf: 'center',
+  },
+  customButton: {
+    backgroundColor: 'black',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').height * 0.1,
+    borderRadius: 15,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
   },
 });

@@ -186,9 +186,7 @@ export default class CreateInviteScreen extends React.Component {
     });
   }
 
-  getEmailButton(){
-
-  }
+  getEmailButton() {}
 
   render() {
     const { params } = this.props.navigation.state;
@@ -248,7 +246,15 @@ export default class CreateInviteScreen extends React.Component {
                   </View>
                 </TouchableOpacity>
                 <TouchableOpacity onPress={this.noAccountOption.bind(this)}>
-                  <Text style={{ color: 'white', alignSelf: 'center' }}>
+                  <Text
+                    style={{
+                      fontSize: 15,
+                      fontWeight: 'bold',
+                      color: 'white',
+                      marginTop: 10,
+                      alignContent: 'center',
+                      alignSelf: 'center',
+                    }}>
                     I know this person does not have an account
                   </Text>
                 </TouchableOpacity>
@@ -315,12 +321,23 @@ export default class CreateInviteScreen extends React.Component {
                   </Text>
                   <TouchableOpacity
                     onPress={this.createInvite.bind(this, curuser)}
-                    disabled={(this.state.acceptor_email.length > 0 && this.state.acceptor_email.includes("@")) || this.state.chosen_user ? (''):'false'}>
+                    disabled={
+                      (this.state.acceptor_email.length > 0 &&
+                        this.state.acceptor_email.includes('@')) ||
+                      this.state.chosen_user
+                        ? ''
+                        : 'false'
+                    }>
                     <View style={styles.customButton}>
                       <Text
                         style={{
                           fontWeight: 'bold',
-                          color: (this.state.acceptor_email.length > 0 && this.state.acceptor_email.includes("@")) || this.state.chosen_user ? ('white'):'grey',
+                          color:
+                            (this.state.acceptor_email.length > 0 &&
+                              this.state.acceptor_email.includes('@')) ||
+                            this.state.chosen_user
+                              ? 'white'
+                              : 'grey',
                           fontSize: 20,
                           alignContent: 'center',
                           alignSelf: 'center',
@@ -388,7 +405,7 @@ const styles = StyleSheet.create({
   },
   resultsCard: {
     width: Dimensions.get('window').width * 0.75,
-    height: Dimensions.get('window').width * 1,
+    height: Dimensions.get('window').height * 0.5,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
@@ -439,25 +456,3 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
 });
-
-/*
-  pickerChange(index) {
-    this.state.found_users.map((v, i) => {
-      if (index === i) {
-        this.setState({
-          cur_first_name: this.state.found_users[index].first_name,
-          cur_last_name: this.state.found_users[index].last_name,
-        });
-      }
-    });
-  }
-              <Picker
-                selectedValue={this.state.found_users}
-                onValueChange={(itemValue, itemIndex) =>
-                  this.pickerChange(itemIndex)
-                }>
-                {this.state.found_users.map(user => {
-                  curlabel = user.first_name + " " + user.last_name + " (" + user.email + ")";
-                  return <Picker.Item label={curlabel} value={user.first_name}/>;
-                })}
-              </Picker>*/

@@ -10,6 +10,7 @@ import {
   Headers,
   TouchableOpacity,
   ScrollView,
+  Dimensions,
 } from 'react-native';
 import Constants from 'expo-constants';
 import { createStackNavigator } from 'react-navigation';
@@ -42,7 +43,7 @@ export default class CreateSquadScreen extends React.Component {
     this.setState({ organizer_id: organizer_id });
   }
 
-  onCreatePress(email, password) {
+  onCreatePress(curuser) {
     const body = JSON.stringify({
       name: this.state.name,
       description: this.state.description,
@@ -77,6 +78,7 @@ export default class CreateSquadScreen extends React.Component {
         };
         this.props.navigation.navigate('Squad', {
           cursquad: cursquad,
+          curuser: curuser,
         });
       })
       .catch(error => {
@@ -89,6 +91,7 @@ export default class CreateSquadScreen extends React.Component {
     const curuser = params.curuser;
 
     var isEnabled = 'false';
+    var text_color = 'grey';
     if (
       (this.state.name.length > 0) &
       (this.state.description.length > 0) &
@@ -97,6 +100,7 @@ export default class CreateSquadScreen extends React.Component {
       (this.state.country.length > 0)
     ) {
       isEnabled = '';
+      text_color = 'white';
     }
 
     return (
@@ -104,7 +108,7 @@ export default class CreateSquadScreen extends React.Component {
         colors={['#5B4FFF', '#D616CF']}
         start={{ x: 0, y: 0.5 }}
         end={{ x: 1, y: 1 }}>
-        <ScrollView style={{height:'100%'}}>
+        <ScrollView style={{ height: '100%' }}>
           <View
             style={[
               {
@@ -144,25 +148,20 @@ export default class CreateSquadScreen extends React.Component {
               onChangeText={country => this.setState({ country })}
               value={this.state.country}
             />
-            <View
-              style={[
-                {
-                  width: '50%',
-                  alignSelf: 'center',
-                  variant: 'primary',
-                  margin: 10,
-                  marginBottom: 300,
-                },
-              ]}>
-              <Button
-                variant="primary"
-                color="white"
-                borderRadius="10"
-                onPress={this.onCreatePress.bind(this)}
-                title="Create Squad"
-                disabled={isEnabled}
-              />
-            </View>
+            <TouchableOpacity
+              onPress={this.onCreatePress.bind(this, curuser)}
+              disabled={isEnabled}>
+              <View style={styles.customButton}>
+                <Text
+                  style={{
+                    color: text_color,
+                    fontSize: 18,
+                    fontWeight: 'bold',
+                  }}>
+                  Create Squad
+                </Text>
+              </View>
+            </TouchableOpacity>
           </View>
         </ScrollView>
       </LinearGradient>
@@ -180,5 +179,15 @@ const styles = StyleSheet.create({
     margin: 10,
     padding: 10,
     alignSelf: 'center',
+  },
+  customButton: {
+    backgroundColor: 'black',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').height * 0.1,
+    borderRadius: 15,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
   },
 });

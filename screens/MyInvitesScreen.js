@@ -8,6 +8,7 @@ import {
   Alert,
   FlatList,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
@@ -21,13 +22,14 @@ export default class MyInvitesScreen extends React.Component {
     super(props);
     this.state = {
       data: '',
+      noInvites: '',
     };
   }
 
   componentWillMount() {
     const { params } = this.props.navigation.state;
     const curuser = params.curuser;
-    fetch('http://sqquad.x10host.com/api/invites/user/' + curuser.id, {
+    fetch('http://sqquad.x10host.com/api/invites/email/' + curuser.email, {
       method: 'GET',
     })
       .then(response => response.json())
@@ -39,7 +41,8 @@ export default class MyInvitesScreen extends React.Component {
         this.setState({ data: responseJson });
       })
       .catch(error => {
-        Alert.alert(error.message);
+        //Alert.alert(error.message);
+        this.setState({ noInvites: true });
       });
   }
 
@@ -70,6 +73,14 @@ export default class MyInvitesScreen extends React.Component {
               height: '100%',
             }}>
             <View style={styles.container}>
+              {this.state.noInvites ? (
+                <React.Fragment>
+                  <Text style={styles.info}>Sorry, you have no invites.</Text>
+                  <Text style={styles.info}>
+                    Create a squad or contact a squad member to join!
+                  </Text>
+                </React.Fragment>
+              ) : null}
               <FlatList
                 data={this.state.data}
                 renderItem={({ item }) => (
@@ -82,20 +93,20 @@ export default class MyInvitesScreen extends React.Component {
                   </React.Fragment>
                 )}
               />
+              <TouchableOpacity
+                onPress={this.openCreateInvite.bind(this, curuser)}>
+                <View style={styles.customButton}>
+                  <Text
+                    style={{
+                      color: 'white',
+                      fontSize: 18,
+                      fontWeight: 'bold',
+                    }}>
+                    Invite A Friend
+                  </Text>
+                </View>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity
-              onPress={this.openCreateInvite.bind(this, curuser)}>
-              <View style={styles.customButton}>
-                <Text
-                  style={{
-                    color: 'white',
-                    fontSize: 18,
-                    fontWeight: 'bold',
-                  }}>
-                  Invite A Friend
-                </Text>
-              </View>
-            </TouchableOpacity>
           </View>
         </LinearGradient>
       </React.Fragment>
@@ -107,6 +118,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 22,
+    paddingBottom: 50,
   },
   info: {
     fontSize: 20,
@@ -124,12 +136,11 @@ const styles = StyleSheet.create({
   },
   customButton: {
     backgroundColor: 'black',
-    width: '75%',
-    height: '30%',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').height * 0.1,
     borderRadius: 15,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
-    bottom: 0,
   },
 });

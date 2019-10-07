@@ -8,6 +8,7 @@ import {
   Alert,
   FlatList,
   StyleSheet,
+  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { createStackNavigator } from 'react-navigation';
@@ -21,6 +22,7 @@ export default class MySquadsScreen extends React.Component {
     super(props);
     this.state = {
       data: '',
+      noSquads: '',
     };
   }
 
@@ -39,7 +41,8 @@ export default class MySquadsScreen extends React.Component {
         this.setState({ data: responseJson });
       })
       .catch(error => {
-        Alert.alert(error.message);
+        //Alert.alert(error.message);
+        this.setState({ noSquads: true });
       });
   }
 
@@ -50,10 +53,10 @@ export default class MySquadsScreen extends React.Component {
     });
   }
 
-  openCreateSquad(curuser){
-    this.props.navigation.navigate('CreateSquad',{
+  openCreateSquad(curuser) {
+    this.props.navigation.navigate('CreateSquad', {
       curuser: curuser,
-    })
+    });
   }
 
   render() {
@@ -70,19 +73,29 @@ export default class MySquadsScreen extends React.Component {
               height: '100%',
             }}>
             <View style={styles.container}>
+              {this.state.noSquads ? (
+                <React.Fragment>
+                  <Text style={styles.info}>Sorry, you have no squads.</Text>
+                  <Text style={styles.info}>
+                    Create or join one to get started!
+                  </Text>
+                </React.Fragment>
+              ) : null}
               <FlatList
                 data={this.state.data}
                 renderItem={({ item }) => (
                   <React.Fragment>
-                    <TouchableOpacity onPress={this.openSquad.bind(this, item, curuser)}>
+                    <TouchableOpacity
+                      onPress={this.openSquad.bind(this, item, curuser)}>
                       <Text style={styles.info}>{item.name} </Text>
                     </TouchableOpacity>
                     <View style={styles.line} />
                   </React.Fragment>
                 )}
               />
-              <View style={styles.customButton}>
-                <TouchableOpacity onPress={this.openCreateSquad.bind(this,curuser)}>
+              <TouchableOpacity
+                onPress={this.openCreateSquad.bind(this, curuser)}>
+                <View style={styles.customButton}>
                   <Text
                     style={{
                       color: 'white',
@@ -91,8 +104,8 @@ export default class MySquadsScreen extends React.Component {
                     }}>
                     Create New Squad
                   </Text>
-                </TouchableOpacity>
-              </View>
+                </View>
+              </TouchableOpacity>
             </View>
           </View>
         </LinearGradient>
@@ -122,12 +135,10 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   customButton: {
-    flexDirection: 'row',
     backgroundColor: 'black',
-    width: '75%',
-    height: '10%',
+    width: Dimensions.get('window').width * 0.75,
+    height: Dimensions.get('window').height * 0.1,
     borderRadius: 15,
-    //marginBottom: 25,
     alignSelf: 'center',
     justifyContent: 'center',
     alignItems: 'center',
