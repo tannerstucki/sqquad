@@ -17,6 +17,7 @@ import InviteScreen from './screens/InviteScreen';
 import RegisterScreen from './screens/RegisterScreen';
 import CreateSquadScreen from './screens/CreateSquadScreen';
 import CreateInviteScreen from './screens/CreateInviteScreen';
+import ConversationScreen from './screens/ConversationScreen';
 
 export default createStackNavigator({
   /*Home: {
@@ -37,8 +38,8 @@ export default createStackNavigator({
             title="Home"
             onPress={() => navigation.navigate('Home')}
           />
-        )
-      }
+        ),
+      };
     },
   },
   Messages: {
@@ -50,8 +51,8 @@ export default createStackNavigator({
             title="Home"
             onPress={() => navigation.navigate('Home')}
           />
-        )
-      }
+        ),
+      };
     },
   },
   Tasks: {
@@ -63,8 +64,8 @@ export default createStackNavigator({
             title="Home"
             onPress={() => navigation.navigate('Home')}
           />
-        )
-      }
+        ),
+      };
     },
   },
   Polls: {
@@ -76,8 +77,8 @@ export default createStackNavigator({
             title="Home"
             onPress={() => navigation.navigate('Home')}
           />
-        )
-      }
+        ),
+      };
     },
   },
   Schedule: {
@@ -89,8 +90,8 @@ export default createStackNavigator({
             title="Home"
             onPress={() => navigation.navigate('Home')}
           />
-        )
-      }
+        ),
+      };
     },
   },
   User: {
@@ -108,8 +109,8 @@ export default createStackNavigator({
             title="My Squads"
             onPress={() => navigation.navigate('MySquads')}
           />
-        )
-      }
+        ),
+      };
     },
   },
   MyInvites: {
@@ -126,5 +127,8 @@ export default createStackNavigator({
   },
   CreateInvite: {
     screen: CreateInviteScreen,
+  },
+  Conversation: {
+    screen: ConversationScreen,
   },
 });

@@ -58,7 +58,7 @@ class BottomMenu extends React.Component {
           flex: 1,
           flexDirection: 'row',
           width: '100%',
-          height: 200,
+          height: '10%',
           backgroundColor: 'white',
           alignItems: 'center',
           justifyContent: 'center',
