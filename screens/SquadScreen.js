@@ -48,13 +48,17 @@ export default class SquadScreen extends React.Component {
       });
   }
 
+  componentWillUnmount() {
+    //console.log('You good');
+  }
+
   openUser(user) {
     this.props.navigation.navigate('User', {
       curuser: user,
     });
   }
 
-  openCreateInvite(cursquad, curuser){
+  openCreateInvite(cursquad, curuser) {
     this.props.navigation.navigate('CreateInvite', {
       curuser: curuser,
       cursquad: cursquad,
@@ -98,12 +102,14 @@ export default class SquadScreen extends React.Component {
             </TouchableOpacity>
             <View style={styles.line} />
             <Text style={styles.generic}>Squad Organizer</Text>
-                <TouchableOpacity
-                  onPress={this.openCreateInvite.bind(this, cursquad, curuser)}>
-                  <View style={styles.customButton}>
-                    <Text style={styles.buttonText}>Invite a Friend to this Squad</Text>
-                  </View>
-                </TouchableOpacity>
+            <TouchableOpacity
+              onPress={this.openCreateInvite.bind(this, cursquad, curuser)}>
+              <View style={styles.customButton}>
+                <Text style={styles.buttonText}>
+                  Invite a Friend to this Squad
+                </Text>
+              </View>
+            </TouchableOpacity>
           </ScrollView>
           {/*Add squad options like invite friend, leave group, etc.*/}
         </LinearGradient>

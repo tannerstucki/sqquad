@@ -51,10 +51,10 @@ export default class MessageScreen extends React.Component {
 
   openConversation(curconversation, curuser) {
     var { params } = this.props.navigation.state;
-    Alert.alert("1: " + curconversation.message_type);
     this.props.navigation.navigate('Conversation', {
       curuser: curuser,
       curconversation: curconversation,
+      cursquadid: curconversation.squad_id,
     });
   }
 
